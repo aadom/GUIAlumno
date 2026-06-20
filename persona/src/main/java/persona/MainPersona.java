@@ -12,10 +12,7 @@ import java.time.Month;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author g.guzman
- */
+
 public class MainPersona {
 
     public static void main(String[] args) {

@@ -9,10 +9,6 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import persona.Alumno;
 
-/**
- *
- * @author g.guzman
- */
 public class AlumnosModel extends AbstractTableModel {
     
     private List<Alumno> alumnos;
@@ -47,8 +43,7 @@ public class AlumnosModel extends AbstractTableModel {
                 return alu.getApellido();
             }
             case 3 -> {
-                // return alu.getFecNac(); // TODO
-                return LocalDate.now().plusYears(rowIndex); // simulación
+                 return alu.getFecNac();
             }
             default -> throw new AssertionError();
         }
@@ -57,7 +52,5 @@ public class AlumnosModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         return ENCABEZADOS[column];
-    }
-    
-    
+    } 
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package persona;
 
 import exceptions.EdadInvalidaException;
@@ -10,10 +6,7 @@ import exceptions.PromedioInvalidoException;
 import java.time.LocalDate;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- *
- * @author g.guzman
- */
+
 public class Alumno extends Persona {
     
     private static final String EMPTY_STRING = "";
@@ -21,6 +14,15 @@ public class Alumno extends Persona {
     
     private double promedio;
     private LocalDate fecIng;
+    private LocalDate fecNac;
+
+    public LocalDate getFecNac() {
+        return fecNac;
+    }
+
+    public void setFecNac(LocalDate fecNac) {
+        this.fecNac = fecNac;
+    }
     private short cantMatAprob;
     private char estado; // A o B
 
@@ -69,6 +71,14 @@ public class Alumno extends Persona {
         return EMPTY_STRING+dayOfMonth+SLASH+fecIng.getMonthValue()+SLASH+fecIng.getYear();
     }
     
+    public String getFecNacStr() {
+    if (fecNac == null) {
+        return EMPTY_STRING;
+    }
+    String dayOfMonth = StringUtils.leftPad(String.valueOf(fecNac.getDayOfMonth()), 2, "0");
+    return EMPTY_STRING + dayOfMonth + SLASH + fecNac.getMonthValue() + SLASH + fecNac.getYear();
+}
+    
     public LocalDate getFecIng() {
         return fecIng;
     }
@@ -96,11 +106,10 @@ public class Alumno extends Persona {
     }
 
     
-    
     @Override
     public String toString() {
         return super.toString() +
-                " Alumno{" + "promedio=" + promedio + ", fecIng=" + getFecIngStr() + ", cantMatAprob=" + cantMatAprob + '}';
+                " Alumno{" + "promedio=" + promedio + ", fecIng=" + getFecIngStr() + ", fecNac=" + getFecNacStr() +", cantMatAprob=" + cantMatAprob + '}';
     }
 
 }
