@@ -9,7 +9,6 @@ import exceptions.PromedioInvalidoException;
 import java.time.LocalDate;
 import org.apache.commons.lang3.StringUtils;
 
-
 public class Alumno extends Persona {
 
     private static final String EMPTY_STRING = "";
