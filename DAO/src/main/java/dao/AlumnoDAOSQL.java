@@ -96,8 +96,19 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
     }
 
     @Override
-    public void delete(Integer id) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void delete(Integer dni) throws DAOException {
+        String sql = "UPDATE alumnos SET ESTADO = 0 WHERE DNI = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, dni);
+            int filas = stmt.executeUpdate();
+            if (filas == 0) {
+                throw new DAOException("No se encontró el alumno con DNI " + dni);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DAOException("Error al eliminar: " + ex.getLocalizedMessage());
+        }
+        
     }
 
     @Override
