@@ -427,7 +427,20 @@ public class AlumnoGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void consutarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consutarButtonActionPerformed
+        int selectedRow = alumnosTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un alumno para consultar.",
+                    "Aviso",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Alumno alu = alumnos.get(selectedRow);
+        AlumnoDTO dto = AlumnoMapper.entity2Dto(alu);
+
         AlumnoDialog alumnoDialog = new AlumnoDialog(this, true, CrudOptionsEnum.READ);
+        alumnoDialog.setDto(dto);
         alumnoDialog.setVisible(true);
 
     }//GEN-LAST:event_consutarButtonActionPerformed

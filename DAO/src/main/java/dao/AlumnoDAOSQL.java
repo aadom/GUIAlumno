@@ -103,7 +103,7 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
     @Override
     public List<Alumno> findAll(boolean all) throws DAOException {
         List<Alumno> lista = new ArrayList<>();
-        String sql = "SELECT DNI, NOMBRE, APELLIDO, FECNAC, PROMEDIO, ESTADO FROM alumnos";
+        String sql = "SELECT DNI, NOMBRE, APELLIDO, FECNAC, FECING, PROMEDIO, ESTADO FROM alumnos";
         if (!all) {
             sql += " WHERE estado = 1";
         }
@@ -115,7 +115,8 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
                 alu.setNombre(rs.getString("NOMBRE"));
                 alu.setApellido(rs.getString("APELLIDO"));
                 alu.setFecNac(DateUtils.sqlDate2LocalDate(rs.getDate("FECNAC")));
-                //alu.setPromedio(rs.getDouble("PROMEDIO"));
+                alu.setFecIng(DateUtils.sqlDate2LocalDate(rs.getDate("FECING")));
+                alu.setPromedio(rs.getDouble("PROMEDIO"));
                 int estadoInt = rs.getInt("ESTADO");
                 char estadoChar = (estadoInt == 1) ? 'A' : 'I';
                 alu.setEstado(estadoChar);
@@ -128,6 +129,8 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
         } catch (NombreApellidoInvalidoException /*| PromedioInvalidoException*/ ex) {
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
             throw new DAOException("Error al mapear datos: " + ex.getLocalizedMessage());
+        } catch (PromedioInvalidoException ex) {
+            Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lista;
     }
