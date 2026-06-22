@@ -465,7 +465,7 @@ public class AlumnoGUI extends javax.swing.JFrame {
             if (dto != null) {
                 try {
                     dao.update(AlumnoMapper.dto2Entity(dto));
-
+                    recargarAlumnos();
                 } catch (NombreApellidoInvalidoException
                         | DniInvalidoException
                         | FechaInvalidaException
@@ -474,6 +474,7 @@ public class AlumnoGUI extends javax.swing.JFrame {
                         | EstadoInvalidoException
                         | DAOException ex) {
                     Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else {
