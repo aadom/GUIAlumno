@@ -39,6 +39,7 @@ public class AlumnoGUI extends javax.swing.JFrame {
     private AlumnoDAOTXT daoTXT;
     private AlumnoDAOSQL daoSQL;
     private AlumnoTableRenderer renderer;
+    private boolean connected = false;
 
     /**
      * Creates new form AlumnoGUI
@@ -87,6 +88,8 @@ public class AlumnoGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         pathfileTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
+        contrasena = new javax.swing.JLabel();
+        jPasswordField1 = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -199,15 +202,15 @@ public class AlumnoGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47)
-                .addComponent(userDBTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 294, Short.MAX_VALUE)
+                .addComponent(userDBTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 273, Short.MAX_VALUE)
                 .addComponent(btnBD)
                 .addGap(23, 23, 23))
         );
         dbConnPanelLayout.setVerticalGroup(
             dbConnPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dbConnPanelLayout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
+                .addContainerGap(30, Short.MAX_VALUE)
                 .addGroup(dbConnPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBD)
                     .addComponent(jLabel3)
@@ -249,6 +252,14 @@ public class AlumnoGUI extends javax.swing.JFrame {
                 .addGap(16, 16, 16))
         );
 
+        contrasena.setText("Contraseña:");
+
+        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPasswordField1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -256,27 +267,35 @@ public class AlumnoGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(contrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(31, 31, 31)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(40, 40, 40)
-                                .addComponent(repoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(dbConnPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 23, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(31, 31, 31)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(40, 40, 40)
+                                        .addComponent(repoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(dbConnPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 23, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(verTodosCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                .addContainerGap())
+                                .addGap(12, 12, 12)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(verTodosCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,20 +308,24 @@ public class AlumnoGUI extends javax.swing.JFrame {
                 .addComponent(txtPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(dbConnPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(contrasena)
+                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(verTodosCheckBox)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void repoComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repoComboBoxActionPerformed
-        if (repoComboBox.getSelectedIndex() == 0) { // es TXT ?
+        if (repoComboBox.getSelectedIndex() == 0) { // TXT
             if (daoTXT != null) {
                 try {
                     dao = daoTXT;
@@ -312,18 +335,21 @@ public class AlumnoGUI extends javax.swing.JFrame {
                     Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        } else if (daoSQL != null) {
-            try {
-                dao = daoSQL;
-                dao.findAll(false);
-                setAlumnosInModel(alumnos);
-            } catch (DAOException ex) {
-                Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
+            dbConnPanel.setVisible(false);
+            txtPanel.setVisible(true);
+        } else { // Base de Datos
+            if (daoSQL != null && connected) {
+                try {
+                    dao = daoSQL;
+                    dao.findAll(false);
+                    setAlumnosInModel(alumnos);
+                } catch (DAOException ex) {
+                    Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+            dbConnPanel.setVisible(true);
+            txtPanel.setVisible(false);
         }
-
-        dbConnPanel.setVisible(repoComboBox.getSelectedIndex() != 0);
-        txtPanel.setVisible(repoComboBox.getSelectedIndex() == 0);
     }//GEN-LAST:event_repoComboBoxActionPerformed
 
     private void crearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearButtonActionPerformed
@@ -339,13 +365,13 @@ public class AlumnoGUI extends javax.swing.JFrame {
 
             //alumnos.add(new Alumno(3, "María Ines", "Gomez"));
             //alumnosModel.fireTableDataChanged(); // refresh de la grilla
-        } catch (NombreApellidoInvalidoException | 
-                DniInvalidoException |
-                FechaInvalidaException |
-                PromedioInvalidoException |
-                CantidadMateriasInvalidaException |
-                EstadoInvalidoException |
-                DAOException ex) {
+        } catch (NombreApellidoInvalidoException
+                | DniInvalidoException
+                | FechaInvalidaException
+                | PromedioInvalidoException
+                | CantidadMateriasInvalidaException
+                | EstadoInvalidoException
+                | DAOException ex) {
             Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
 
         }
@@ -353,18 +379,37 @@ public class AlumnoGUI extends javax.swing.JFrame {
 
     private void eliminarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarButtonActionPerformed
         int index = alumnosTable.getSelectedRow();
-        if (index >= 0) {
-            Alumno alu = alumnos.get(index);
-            int resp = JOptionPane.showConfirmDialog(this, "Está seguro de eliminar al alumno " + alu.getNombre(), "Confirmación",
-                    JOptionPane.OK_CANCEL_OPTION);
-
-            if (resp == JOptionPane.OK_OPTION) {
-                alumnos.remove(index);
-                //alumnos.remove(alumnos.get(alumnos.size()-1));
-                alumnosModel.fireTableDataChanged(); // refresh de la grilla
-            }
-        } else {
+        if (index < 0) {
             JOptionPane.showMessageDialog(this, "No ha seleccionado un alumno", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Alumno alu = alumnos.get(index);
+        int resp = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de eliminar al alumno " + alu.getNombre() + " " + alu.getApellido() + "?",
+                "Confirmación", JOptionPane.OK_CANCEL_OPTION);
+
+        if (resp == JOptionPane.OK_OPTION) {
+            try {
+                // Si el DAO es SQL (Base de Datos)
+                if (dao instanceof AlumnoDAOSQL) {
+                    dao.delete(alu.getDni());
+                    recargarAlumnos(); // refresca la tabla desde la BD
+                    JOptionPane.showMessageDialog(this, "Alumno eliminado de la base de datos", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } // Si el DAO es TXT (archivo)
+                else if (dao instanceof AlumnoDAOTXT) {
+                    alumnos.remove(index);
+                    alumnosModel.fireTableDataChanged();
+                    JOptionPane.showMessageDialog(this, "Alumno eliminado de la lista local", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Repositorio no soportado para eliminar", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (DAOException ex) {
+                Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,
+                        "Error al eliminar: " + ex.getLocalizedMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_eliminarButtonActionPerformed
 
@@ -414,13 +459,13 @@ public class AlumnoGUI extends javax.swing.JFrame {
                 try {
                     dao.update(AlumnoMapper.dto2Entity(dto));
 
-                } catch (NombreApellidoInvalidoException |
-                        DniInvalidoException |
-                        FechaInvalidaException |
-                        PromedioInvalidoException |
-                        CantidadMateriasInvalidaException |
-                        EstadoInvalidoException |
-                        DAOException ex) {
+                } catch (NombreApellidoInvalidoException
+                        | DniInvalidoException
+                        | FechaInvalidaException
+                        | PromedioInvalidoException
+                        | CantidadMateriasInvalidaException
+                        | EstadoInvalidoException
+                        | DAOException ex) {
                     Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -502,40 +547,44 @@ public class AlumnoGUI extends javax.swing.JFrame {
     }
 
     private void btnBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBDActionPerformed
+        // Si ya estamos conectados, desconectar
+        if (connected) {
+            desconectar();
+            return;
+        }
+
+        // Si no estamos conectados, intentar conectar
         String user = userDBTextField.getText().trim();
         if (user.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Debe ingresar un usuario",
-                    "Error",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Debe ingresar un usuario", "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 2. Pedir contraseña
-        String password = JOptionPane.showInputDialog(this,
-                "Ingrese la contraseña para la base de datos:");
-        if (password == null) { // Usuario canceló
+        String password = new String(jPasswordField1.getPassword()).trim();
+        if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar la contraseña", "Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 3. Conectar y cargar datos
         try {
-            // Configurar el mapa para la fábrica
             Map<String, String> config = new HashMap<>();
             config.put(DAOFactory.TIPO_DAO, DAOFactory.TIPO_DAO_SQL);
             config.put(DAOFactory.USER_DB, user);
             config.put(DAOFactory.PWD_DB, password);
 
-            // Crear el DAO mediante la fábrica
             dao = DAOFactory.createDAO(config);
             if (dao instanceof AlumnoDAOSQL alumnoDAOSQL) {
                 daoSQL = alumnoDAOSQL;
             }
 
-            // 4. Recargar los alumnos según el checkbox
             recargarAlumnos();
 
-            // 5. Mensaje de éxito
+            // Marcar como conectado
+            connected = true;
+            btnBD.setText("Desconectar");
+            userDBTextField.setEnabled(false);
+            jPasswordField1.setEnabled(false);
+
             JOptionPane.showMessageDialog(this,
                     "Conexión exitosa. Se cargaron " + alumnos.size() + " alumnos.",
                     "Éxito",
@@ -544,11 +593,44 @@ public class AlumnoGUI extends javax.swing.JFrame {
         } catch (DAOFactoryException | DAOException ex) {
             Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this,
-                    "Error al conectar o consultar: " + ex.getLocalizedMessage(),
+                    "Error al conectar: " + ex.getLocalizedMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnBDActionPerformed
+
+    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPasswordField1ActionPerformed
+
+    private void desconectar() {
+        try {
+            // Cerrar la conexión SQL si existe
+            if (daoSQL != null) {
+                daoSQL.close();
+                daoSQL = null;
+            }
+            // Limpiar el DAO
+            dao = null;
+            // Limpiar la lista de alumnos
+            alumnos.clear();
+            alumnosModel.fireTableDataChanged();
+            verTodosCheckBox.setSelected(false);
+            // Marcar como desconectado
+            connected = false;
+            btnBD.setText("Conectar BD");
+            userDBTextField.setEnabled(true);
+            jPasswordField1.setEnabled(true);
+            jPasswordField1.setText("");
+            JOptionPane.showMessageDialog(this, "Desconectado correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+        } catch (DAOException ex) {
+            Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,
+                    "Error al desconectar: " + ex.getLocalizedMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -590,6 +672,7 @@ public class AlumnoGUI extends javax.swing.JFrame {
     private javax.swing.JButton browseButton;
     private javax.swing.JButton btnBD;
     private javax.swing.JButton consutarButton;
+    private javax.swing.JLabel contrasena;
     private javax.swing.JButton crearButton;
     private javax.swing.JPanel dbConnPanel;
     private javax.swing.JButton eliminarButton;
@@ -597,6 +680,7 @@ public class AlumnoGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton modificarButton;
     private javax.swing.JTextField pathfileTextField;
