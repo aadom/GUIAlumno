@@ -4,6 +4,10 @@
  */
 package dao;
 
+import exceptions.CantidadMateriasInvalidaException;
+import exceptions.DniInvalidoException;
+import exceptions.EstadoInvalidoException;
+import exceptions.FechaInvalidaException;
 import exceptions.NombreApellidoInvalidoException;
 import exceptions.PromedioInvalidoException;
 import java.sql.Connection;
@@ -27,7 +31,7 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
 
     AlumnoDAOSQL(String user, String password) throws DAOException {
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/universidad", user, password);
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/universidad", "grupo06", "root");
             System.out.println("dao.AlumnoDAOSQL.<init>() OK!!!");
 
             String insertSql = "INSERT INTO alumnos\n"
@@ -63,7 +67,8 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
     }
 
     @Override
-    public Alumno read(Integer dni) throws DAOException {
+    public Alumno read(Integer dni)  
+            throws DAOException {
         try {
             readPrepareStatement.setInt(1, dni);
             final ResultSet rs = readPrepareStatement.executeQuery();
@@ -80,11 +85,17 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
         } catch (SQLException ex) {
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
             throw new DAOException("Error AL LEER: " + ex.getLocalizedMessage());
-        } catch (NombreApellidoInvalidoException ex) {
+
+        } catch (DniInvalidoException |
+                 FechaInvalidaException |
+                 EstadoInvalidoException |
+                 NombreApellidoInvalidoException |
+                 CantidadMateriasInvalidaException |
+                 PromedioInvalidoException ex) {
+
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-            throw new DAOException("Erro al setear datos del alumno: " + ex.getLocalizedMessage());
-        } catch (PromedioInvalidoException ex) {
-            Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DAOException("Error al setear datos del alumno: "
+                    + ex.getLocalizedMessage());
         }
 
         return null;
@@ -126,11 +137,15 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
         } catch (SQLException ex) {
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
             throw new DAOException("Error al listar alumnos: " + ex.getLocalizedMessage());
-        } catch (NombreApellidoInvalidoException /*| PromedioInvalidoException*/ ex) {
+        } catch (DniInvalidoException |
+                 FechaInvalidaException |
+                 EstadoInvalidoException |
+                 NombreApellidoInvalidoException |
+                 PromedioInvalidoException ex) {
+
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-            throw new DAOException("Error al mapear datos: " + ex.getLocalizedMessage());
-        } catch (PromedioInvalidoException ex) {
-            Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DAOException("Error al mapear datos: "
+                    + ex.getLocalizedMessage());
         }
         return lista;
     }
