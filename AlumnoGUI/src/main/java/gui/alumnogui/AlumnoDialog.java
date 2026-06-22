@@ -15,6 +15,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import dao.DAOException;
 import persona.Alumno;
+import exceptions.CantidadMateriasInvalidaException;
+import exceptions.DniInvalidoException;
+import exceptions.EstadoInvalidoException;
+import exceptions.FechaInvalidaException;
+import exceptions.NombreApellidoInvalidoException;
+import exceptions.PromedioInvalidoException;
 
 public class AlumnoDialog extends javax.swing.JDialog {
 
@@ -42,7 +48,8 @@ public class AlumnoDialog extends javax.swing.JDialog {
             dniTextField.setEnabled(false);
             nombreTextField.setEnabled(false);
             nombreTextField1.setEnabled(false);
-            nombreTextField3.setEnabled(false);
+            radioActivo.setEnabled(false);
+            radioBaja.setEnabled(false);
             nombreTextField4.setEnabled(false);
             fecIngDateChooser.setEnabled(false);
             fecIngDateChooser1.setEnabled(false);
@@ -83,7 +90,12 @@ public class AlumnoDialog extends javax.swing.JDialog {
         fecNac = new javax.swing.JLabel();
         fecIngDateChooser1 = new com.toedter.calendar.JDateChooser();
         estado = new javax.swing.JLabel();
-        nombreTextField3 = new javax.swing.JTextField();
+        estadoGroup = new javax.swing.ButtonGroup();
+        radioActivo = new javax.swing.JRadioButton("A - Activo");
+        radioBaja = new javax.swing.JRadioButton("B - Baja");
+        estadoGroup.add(radioActivo);
+        estadoGroup.add(radioBaja);
+        radioActivo.setSelected(true);
         cantMatAprob = new javax.swing.JLabel();
         nombreTextField4 = new javax.swing.JTextField();
         promedio = new javax.swing.JLabel();
@@ -172,7 +184,10 @@ public class AlumnoDialog extends javax.swing.JDialog {
                         .addComponent(estado, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(72, 72, 72)
                         .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(nombreTextField3)
+                            .addGroup(aluPanelLayout.createSequentialGroup()
+                                .addComponent(radioActivo)
+                                .addGap(10, 10, 10)
+                                .addComponent(radioBaja))
                             .addComponent(nombreTextField4))
                         .addContainerGap())))
         );
@@ -210,7 +225,8 @@ public class AlumnoDialog extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(estado)
-                    .addComponent(nombreTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(radioActivo)
+                    .addComponent(radioBaja)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -266,7 +282,7 @@ public class AlumnoDialog extends javax.swing.JDialog {
         dto.setDni(dniTextField.getText().trim());
         dto.setNombre(nombreTextField.getText().trim());
         dto.setApellido(nombreTextField1.getText().trim());
-        dto.setEstado(nombreTextField3.getText().trim().charAt(0));
+        dto.setEstado(radioActivo.isSelected() ? 'A' : 'B');
         
         
         
@@ -322,18 +338,9 @@ public class AlumnoDialog extends javax.swing.JDialog {
         dto.setFecNac(fecNac);
         dto.setPromedio(Double.parseDouble(nombreTextField5.getText().trim().replace(",", ".")));
         dto.setCantMatAprob(Short.parseShort(nombreTextField4.getText().trim()));
-        
-    /*    try {
-        dto.setFecNac(fecNac);
-        dto.setFecIng(fecIng);
-    } catch (FechaInvalidaException ex) {
-        JOptionPane.showMessageDialog(
-                this,
-                ex.getMessage(),
-                "Fecha inválida",
-                JOptionPane.ERROR_MESSAGE);
-        return;
-}*/
+
+        // Validar que el DTO pueda convertirse a entidad antes de cerrar
+        AlumnoMapper.dto2Entity(dto);
 
         setVisible(false);
 
@@ -371,7 +378,8 @@ public class AlumnoDialog extends javax.swing.JDialog {
         dniTextField.setText(dto.getDni());
         nombreTextField.setText(dto.getNombre());
         nombreTextField1.setText(dto.getApellido());
-        nombreTextField3.setText(dto.getEstado() == 'A' ? "Activo" : "Inactivo");
+        radioActivo.setSelected(dto.getEstado() == 'A');
+        radioBaja.setSelected(dto.getEstado() == 'B');
         nombreTextField4.setText(String.valueOf(dto.getCantMatAprob()));
         nombreTextField5.setText(String.valueOf(dto.getPromedio()));
 
@@ -443,7 +451,9 @@ public class AlumnoDialog extends javax.swing.JDialog {
     private javax.swing.JLabel nombre;
     private javax.swing.JTextField nombreTextField;
     private javax.swing.JTextField nombreTextField1;
-    private javax.swing.JTextField nombreTextField3;
+    private javax.swing.ButtonGroup estadoGroup;
+    private javax.swing.JRadioButton radioActivo;
+    private javax.swing.JRadioButton radioBaja;
     private javax.swing.JTextField nombreTextField4;
     private javax.swing.JTextField nombreTextField5;
     private javax.swing.JButton okButton;
@@ -452,6 +462,8 @@ public class AlumnoDialog extends javax.swing.JDialog {
 
     private boolean validarForm() {
         return StringUtils.isNotBlank(nombreTextField.getText())
-            && StringUtils.isNotBlank(nombreTextField1.getText());
+            && StringUtils.isNotBlank(nombreTextField1.getText())
+            && StringUtils.isNotBlank(nombreTextField5.getText())
+            && StringUtils.isNotBlank(nombreTextField4.getText());
     }
 }
