@@ -270,37 +270,26 @@ public class AlumnoDialog extends javax.swing.JDialog {
         
         
         
-        Calendar calendar = fecIngDateChooser.getCalendar();
-        Calendar dateNacimiento = fecIngDateChooser1.getCalendar();
-        
-        if (calendar == null) {
-        JOptionPane.showMessageDialog(
-                this,
-                "Debe ingresar fecha de Ingreso",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-        
-        if (dateNacimiento == null) {
-        JOptionPane.showMessageDialog(
-                this,
-                "Debe ingresar fecha de Nacimiento",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-        
-        
-        LocalDate fecIng = LocalDateTime
-                .ofInstant(calendar.toInstant(),
-                        calendar.getTimeZone().toZoneId())
+        Calendar calendarNac = fecIngDateChooser.getCalendar();
+        Calendar calendarIng = fecIngDateChooser1.getCalendar();
+
+        if (calendarNac == null) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar fecha de Nacimiento", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (calendarIng == null) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar fecha de Ingreso", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        LocalDate fecNac = LocalDateTime
+                .ofInstant(calendarNac.toInstant(), calendarNac.getTimeZone().toZoneId())
                 .toLocalDate();
-        
-         LocalDate fecNac = LocalDateTime
-        .ofInstant(dateNacimiento.toInstant(),
-                dateNacimiento.getTimeZone().toZoneId())
-        .toLocalDate();
+
+        LocalDate fecIng = LocalDateTime
+                .ofInstant(calendarIng.toInstant(), calendarIng.getTimeZone().toZoneId())
+                .toLocalDate();
 
         if (fecNac.isAfter(LocalDate.now())) {
             JOptionPane.showMessageDialog(
