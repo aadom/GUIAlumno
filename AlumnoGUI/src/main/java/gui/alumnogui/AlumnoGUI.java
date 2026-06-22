@@ -51,6 +51,8 @@ public class AlumnoGUI extends javax.swing.JFrame {
 
         dbConnPanel.setVisible(false);
         txtPanel.setVisible(true);
+        contrasena.setVisible(false);
+        jPasswordField1.setVisible(false);
 
         alumnosModel = new AlumnosModel();
 
@@ -341,6 +343,8 @@ public class AlumnoGUI extends javax.swing.JFrame {
             }
             dbConnPanel.setVisible(false);
             txtPanel.setVisible(true);
+            contrasena.setVisible(false);
+            jPasswordField1.setVisible(false);
         } else { // Base de Datos
             if (daoSQL != null && connected) {
                 try {
@@ -353,6 +357,8 @@ public class AlumnoGUI extends javax.swing.JFrame {
             }
             dbConnPanel.setVisible(true);
             txtPanel.setVisible(false);
+            contrasena.setVisible(true);
+            jPasswordField1.setVisible(true);
         }
     }//GEN-LAST:event_repoComboBoxActionPerformed
 
