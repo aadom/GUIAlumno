@@ -4,6 +4,7 @@
  */
 package gui.alumnogui;
 
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -11,6 +12,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
+
+import dao.DAOException;
+import persona.Alumno;
 
 public class AlumnoDialog extends javax.swing.JDialog {
 
@@ -23,7 +27,7 @@ public class AlumnoDialog extends javax.swing.JDialog {
     public void setDto(AlumnoDTO dto) {
         this.dto = dto;
     }
-
+    
     /**
      * Creates new form AlumnoDialog
      */
@@ -123,7 +127,7 @@ public class AlumnoDialog extends javax.swing.JDialog {
 
         apellido.setText("Apellido:");
 
-        fecNac.setText("Fecha Nacimiento:");
+        fecNac.setText("Fecha Ingreso:");
 
         estado.setText("Estado:");
 
@@ -247,18 +251,108 @@ public class AlumnoDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (!validarForm()) {
-            JOptionPane.showMessageDialog(this, "Controle los campos", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(
+                this,
+                "Controle los campos",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+
+        // 1. Crear DTO
+        dto = new AlumnoDTO();
+        dto.setDni(dniTextField.getText().trim());
+        dto.setNombre(nombreTextField.getText().trim());
+        dto.setApellido(nombreTextField1.getText().trim());
+        dto.setEstado(nombreTextField3.getText().trim().charAt(0));
+        
+        
+        
+        Calendar calendar = fecIngDateChooser.getCalendar();
+        Calendar dateNacimiento = fecIngDateChooser1.getCalendar();
+        
+        if (calendar == null) {
+        JOptionPane.showMessageDialog(
+                this,
+                "Debe ingresar fecha de Ingreso",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+        
+        if (dateNacimiento == null) {
+        JOptionPane.showMessageDialog(
+                this,
+                "Debe ingresar fecha de Nacimiento",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+        
+        
+        LocalDate fecIng = LocalDateTime
+                .ofInstant(calendar.toInstant(),
+                        calendar.getTimeZone().toZoneId())
+                .toLocalDate();
+        
+         LocalDate fecNac = LocalDateTime
+        .ofInstant(dateNacimiento.toInstant(),
+                dateNacimiento.getTimeZone().toZoneId())
+        .toLocalDate();
+
+        if (fecNac.isAfter(LocalDate.now())) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "La fecha de nacimiento no puede ser futura",
+                    "Fecha inválida",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
-        dto = new AlumnoDTO();
-        dto.setDni(dniTextField.getText());
-        dto.setNombre(nombreTextField.getText());
+         
+        if (fecIng.isAfter(LocalDate.now())) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "La fecha de ingreso no puede ser futura",
+                    "Fecha inválida",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        /*if (fecIng.isBefore(fecNac)) {
+        JOptionPane.showMessageDialog(
+                this,
+                "La fecha de ingreso no puede ser anterior a la fecha de nacimiento",
+                "Fecha inválida",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }*/
 
-        Calendar calendar = fecIngDateChooser.getCalendar();
-        LocalDate fecIng = LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId()).toLocalDate();
         dto.setFecIng(fecIng);
+        dto.setFecNac(fecNac);
+        
+    /*    try {
+        dto.setFecNac(fecNac);
+        dto.setFecIng(fecIng);
+    } catch (FechaInvalidaException ex) {
+        JOptionPane.showMessageDialog(
+                this,
+                ex.getMessage(),
+                "Fecha inválida",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+}*/
 
         setVisible(false);
+
+    
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this,
+                "Error general: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
