@@ -1,8 +1,12 @@
 package utils;
 
+import exceptions.CantidadMateriasInvalidaException;
 import exceptions.DniInvalidoException;
+import exceptions.EstadoInvalidoException;
+import exceptions.FechaInvalidaException;
 import exceptions.NombreApellidoInvalidoException;
-import org.apache.commons.lang3.StringUtils;
+import exceptions.PromedioInvalidoException;
+import java.time.LocalDate;
 import persona.Alumno;
 
 public final class AlumnoUtils {
@@ -13,30 +17,39 @@ public final class AlumnoUtils {
     }
 
     public static String alumno2String(Alumno alumno) {
-
-        String dniFormatted = StringUtils.leftPad(String.valueOf(alumno.getDni()), 8, '0');
-        String nombreFormatted = StringUtils.leftPad(alumno.getNombre(), 15, StringUtils.SPACE);
-
-        // TODO: Apellido + cantMatAprob + 
-        
-        return dniFormatted+DELIM+nombreFormatted+DELIM+
-                String.format("%5.2f", alumno.getPromedio())+DELIM+
-                alumno.getFecIngStr()+DELIM+
-                alumno.getEstado();
+        return alumno.getDni() + DELIM
+                + alumno.getNombre() + DELIM
+                + alumno.getApellido() + DELIM
+                + alumno.getFecNac() + DELIM
+                + alumno.getPromedio() + DELIM
+                + alumno.getFecIng() + DELIM
+                + alumno.getCantMatAprob() + DELIM
+                + alumno.getEstado();
     }
-    public static Alumno string2Alumno(String alumnoStr) throws NombreApellidoInvalidoException, DniInvalidoException {
-        Alumno alumno = new Alumno();
+
+    public static Alumno string2Alumno(String alumnoStr)
+            throws DniInvalidoException,
+                   NombreApellidoInvalidoException,
+                   FechaInvalidaException,
+                   PromedioInvalidoException,
+                   CantidadMateriasInvalidaException,
+                   EstadoInvalidoException {
+
         String[] campos = alumnoStr.split(DELIM);
 
         int index = 0;
 
+        Alumno alumno = new Alumno();
+
         alumno.setDni(Integer.parseInt(campos[index++]));
         alumno.setNombre(campos[index++]);
+        alumno.setApellido(campos[index++]);
+        alumno.setFecNac(LocalDate.parse(campos[index++]));
+        alumno.setPromedio(Double.parseDouble(campos[index++]));
+        alumno.setFecIng(LocalDate.parse(campos[index++]));
+        alumno.setCantMatAprob(Short.parseShort(campos[index++]));
+        alumno.setEstado(campos[index++].charAt(0));
 
-        // TODO: Apellido + cantMatAprob + 
-        
         return alumno;
-
     }
-
 }

@@ -35,11 +35,11 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
             System.out.println("dao.AlumnoDAOSQL.<init>() OK!!!");
 
             String insertSql = "INSERT INTO alumnos\n"
-                    + "(DNI, NOMBRE, APELLIDO, FECNAC, FECING, PROMEDIO)\n"
-                    + "VALUES (?, ?, ?, ?, ?, ?);";
+                    + "(DNI, NOMBRE, APELLIDO, FECNAC, FECING, PROMEDIO, CANTMATAPROB, ESTADO)\n"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
             insertPrepareStatement = connection.prepareStatement(insertSql);
 
-            String readSql = "SELECT * FROM alumnos WHERE DNI = ?";
+            String readSql = "SELECT DNI, NOMBRE, APELLIDO, FECNAC, FECING, PROMEDIO, CANTMATAPROB, ESTADO FROM alumnos WHERE DNI = ?";
             readPrepareStatement = connection.prepareStatement(readSql);
 
         } catch (SQLException ex) {
@@ -67,7 +67,8 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
     }
 
     @Override
-    public Alumno read(Integer dni) throws DAOException {
+    public Alumno read(Integer dni)  
+            throws DAOException {
         try {
             readPrepareStatement.setInt(1, dni);
             final ResultSet rs = readPrepareStatement.executeQuery();
@@ -80,23 +81,32 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
                 }
                 alu.setNombre(rs.getString("NOMBRE"));
                 alu.setApellido(rs.getString("APELLIDO"));
-                try {
-                    alu.setFecIng(DateUtils.sqlDate2LocalDate(rs.getDate("FECING")));
-                } catch (FechaInvalidaException ex) {
-                    Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                alu.setFecIng(DateUtils.sqlDate2LocalDate(rs.getDate("FECING")));
+                alu.setFecNac(DateUtils.sqlDate2LocalDate(rs.getDate("FECNAC")));
                 alu.setPromedio(rs.getDouble("PROMEDIO"));
+                alu.setCantMatAprob(rs.getShort("CANTMATAPROB"));
 
+                int estadoInt = rs.getInt("ESTADO");
+                char estadoChar = (estadoInt == 1) ? 'A' : 'B';
+                alu.setEstado(estadoChar);
                 return alu;
             }
         } catch (SQLException ex) {
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
             throw new DAOException("Error AL LEER: " + ex.getLocalizedMessage());
-        } catch (NombreApellidoInvalidoException ex) {
+
+        } catch (DniInvalidoException |
+                 FechaInvalidaException |
+                 EstadoInvalidoException |
+                 NombreApellidoInvalidoException |
+                 CantidadMateriasInvalidaException |
+                 PromedioInvalidoException ex) {
+
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-            throw new DAOException("Erro al setear datos del alumno: " + ex.getLocalizedMessage());
-        } catch (PromedioInvalidoException ex) {
-            Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DAOException("Error al setear datos del alumno (DNI="
+                    + dni
+                    + "): "
+                    + ex.getLocalizedMessage());
         }
 
         return null;
@@ -129,54 +139,40 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
         if (!all) {
             sql += " WHERE ESTADO = 'A'";
         }
-
+        Integer dniActual = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
             while (rs.next()) {
                 Alumno alu = new Alumno();
-                try {
-                    alu.setDni(rs.getInt("DNI"));
-                } catch (DniInvalidoException ex) {
-                    Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                dniActual=rs.getInt("DNI");
+                alu.setDni(rs.getInt("DNI"));
                 alu.setNombre(rs.getString("NOMBRE"));
                 alu.setApellido(rs.getString("APELLIDO"));
-                try {
-                    alu.setFecNac(DateUtils.sqlDate2LocalDate(rs.getDate("FECNAC")));
-                } catch (FechaInvalidaException ex) {
-                    Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                try {
-                    alu.setFecIng(DateUtils.sqlDate2LocalDate(rs.getDate("FECING")));
-                } catch (FechaInvalidaException ex) {
-                    Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                try {
-                    alu.setPromedio(rs.getDouble("PROMEDIO"));
-                } catch (PromedioInvalidoException ex) {
-                    Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                try {
-                    alu.setCantMatAprob(rs.getShort("CANTMATAPROB"));
-                } catch (CantidadMateriasInvalidaException ex) {
-                    Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                String estadoStr = rs.getString("ESTADO");
-                if (estadoStr != null && estadoStr.length() > 0) {
-                    try {
-                        alu.setEstado(estadoStr.charAt(0));
-                    } catch (EstadoInvalidoException ex) {
-                        Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                alu.setFecNac(DateUtils.sqlDate2LocalDate(rs.getDate("FECNAC")));
+                alu.setFecIng(DateUtils.sqlDate2LocalDate(rs.getDate("FECING")));
+                alu.setPromedio(rs.getDouble("PROMEDIO"));
+                alu.setCantMatAprob(rs.getShort("CANTMATAPROB"));
+                
+                int estadoInt = rs.getInt("ESTADO");
+                char estadoChar = (estadoInt == 1) ? 'A' : 'B';
+                alu.setEstado(estadoChar);
+
                 lista.add(alu);
             }
         } catch (SQLException ex) {
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
             throw new DAOException("Error al listar alumnos: " + ex.getLocalizedMessage());
-        } catch (NombreApellidoInvalidoException ex) {
+        } catch (DniInvalidoException |
+                 FechaInvalidaException |
+                 EstadoInvalidoException |
+                 NombreApellidoInvalidoException |
+                 CantidadMateriasInvalidaException |
+                 PromedioInvalidoException ex) {
+
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-            throw new DAOException("Error al mapear datos: " + ex.getLocalizedMessage());
+            throw new DAOException("Error al mapear datos (DNI="
+                   + dniActual
+                   + "): "
+                   + ex.getLocalizedMessage());
         }
         return lista;
     }
