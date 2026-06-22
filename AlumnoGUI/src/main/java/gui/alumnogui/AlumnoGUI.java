@@ -59,7 +59,6 @@ public class AlumnoGUI extends javax.swing.JFrame {
 
         renderer = new AlumnoTableRenderer(alumnos);
         alumnosTable.setDefaultRenderer(Object.class, renderer);
-
     }
 
     /**
@@ -89,8 +88,8 @@ public class AlumnoGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         pathfileTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
-        contrasena = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        contrasena = new javax.swing.JLabel();
+        jPasswordField1 = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -253,13 +252,13 @@ public class AlumnoGUI extends javax.swing.JFrame {
                 .addGap(16, 16, 16))
         );
 
-        contrasena.addActionListener(new java.awt.event.ActionListener() {
+        contrasena.setText("Contraseña:");
+
+        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                contrasenaActionPerformed(evt);
+                jPasswordField1ActionPerformed(evt);
             }
         });
-
-        jLabel4.setText("Contraseña:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -270,9 +269,9 @@ public class AlumnoGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(contrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(contrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -311,8 +310,8 @@ public class AlumnoGUI extends javax.swing.JFrame {
                 .addComponent(dbConnPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(contrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(contrasena)
+                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(verTodosCheckBox)
                 .addGap(18, 18, 18)
@@ -366,13 +365,13 @@ public class AlumnoGUI extends javax.swing.JFrame {
 
             //alumnos.add(new Alumno(3, "María Ines", "Gomez"));
             //alumnosModel.fireTableDataChanged(); // refresh de la grilla
-        } catch (NombreApellidoInvalidoException | 
-                DniInvalidoException |
-                FechaInvalidaException |
-                PromedioInvalidoException |
-                CantidadMateriasInvalidaException |
-                EstadoInvalidoException |
-                DAOException ex) {
+        } catch (NombreApellidoInvalidoException
+                | DniInvalidoException
+                | FechaInvalidaException
+                | PromedioInvalidoException
+                | CantidadMateriasInvalidaException
+                | EstadoInvalidoException
+                | DAOException ex) {
             Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
 
         }
@@ -460,13 +459,13 @@ public class AlumnoGUI extends javax.swing.JFrame {
                 try {
                     dao.update(AlumnoMapper.dto2Entity(dto));
 
-                } catch (NombreApellidoInvalidoException |
-                        DniInvalidoException |
-                        FechaInvalidaException |
-                        PromedioInvalidoException |
-                        CantidadMateriasInvalidaException |
-                        EstadoInvalidoException |
-                        DAOException ex) {
+                } catch (NombreApellidoInvalidoException
+                        | DniInvalidoException
+                        | FechaInvalidaException
+                        | PromedioInvalidoException
+                        | CantidadMateriasInvalidaException
+                        | EstadoInvalidoException
+                        | DAOException ex) {
                     Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -561,7 +560,7 @@ public class AlumnoGUI extends javax.swing.JFrame {
             return;
         }
 
-        String password = contrasena.getText().trim();
+        String password = new String(jPasswordField1.getPassword()).trim();
         if (password.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe ingresar la contraseña", "Error", JOptionPane.WARNING_MESSAGE);
             return;
@@ -574,8 +573,8 @@ public class AlumnoGUI extends javax.swing.JFrame {
             config.put(DAOFactory.PWD_DB, password);
 
             dao = DAOFactory.createDAO(config);
-            if (dao instanceof AlumnoDAOSQL) {
-                daoSQL = (AlumnoDAOSQL) dao;
+            if (dao instanceof AlumnoDAOSQL alumnoDAOSQL) {
+                daoSQL = alumnoDAOSQL;
             }
 
             recargarAlumnos();
@@ -584,7 +583,7 @@ public class AlumnoGUI extends javax.swing.JFrame {
             connected = true;
             btnBD.setText("Desconectar");
             userDBTextField.setEnabled(false);
-            contrasena.setEnabled(false);
+            jPasswordField1.setEnabled(false);
 
             JOptionPane.showMessageDialog(this,
                     "Conexión exitosa. Se cargaron " + alumnos.size() + " alumnos.",
@@ -600,9 +599,9 @@ public class AlumnoGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBDActionPerformed
 
-    private void contrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contrasenaActionPerformed
+    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_contrasenaActionPerformed
+    }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     private void desconectar() {
         try {
@@ -616,11 +615,13 @@ public class AlumnoGUI extends javax.swing.JFrame {
             // Limpiar la lista de alumnos
             alumnos.clear();
             alumnosModel.fireTableDataChanged();
+            verTodosCheckBox.setSelected(false);
             // Marcar como desconectado
             connected = false;
             btnBD.setText("Conectar BD");
             userDBTextField.setEnabled(true);
-            contrasena.setEnabled(true);
+            jPasswordField1.setEnabled(true);
+            jPasswordField1.setText("");
             JOptionPane.showMessageDialog(this, "Desconectado correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
         } catch (DAOException ex) {
             Logger.getLogger(AlumnoGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -671,15 +672,15 @@ public class AlumnoGUI extends javax.swing.JFrame {
     private javax.swing.JButton browseButton;
     private javax.swing.JButton btnBD;
     private javax.swing.JButton consutarButton;
-    private javax.swing.JTextField contrasena;
+    private javax.swing.JLabel contrasena;
     private javax.swing.JButton crearButton;
     private javax.swing.JPanel dbConnPanel;
     private javax.swing.JButton eliminarButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton modificarButton;
     private javax.swing.JTextField pathfileTextField;
