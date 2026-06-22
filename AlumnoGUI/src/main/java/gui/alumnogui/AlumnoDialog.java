@@ -11,6 +11,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
+import dao.AlumnoDAOSQL;
+import dao.AlumnoDAOTXT;
+import dao.DAO;
+import dao.DAOException;
+import persona.Alumno;
 
 public class AlumnoDialog extends javax.swing.JDialog {
 
@@ -23,6 +28,10 @@ public class AlumnoDialog extends javax.swing.JDialog {
     public void setDto(AlumnoDTO dto) {
         this.dto = dto;
     }
+    
+     private DAO<Alumno, Integer> dao;
+    private AlumnoDAOTXT daoTXT;
+    private AlumnoDAOSQL daoSQL;
 
     /**
      * Creates new form AlumnoDialog
@@ -114,6 +123,9 @@ public class AlumnoDialog extends javax.swing.JDialog {
         fecNac.setText("Fecha Nacimiento:");
 
         estado.setText("Estado:");
+
+        nombreTextField3.setText("A");
+        nombreTextField3.setEnabled(false);
 
         javax.swing.GroupLayout aluPanelLayout = new javax.swing.GroupLayout(aluPanel);
         aluPanel.setLayout(aluPanelLayout);
@@ -217,18 +229,72 @@ public class AlumnoDialog extends javax.swing.JDialog {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (!validarForm()) {
-            JOptionPane.showMessageDialog(this, "Controle los campos", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        JOptionPane.showMessageDialog(
+                this,
+                "Controle los campos",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+
+        // 1. Crear DTO
         dto = new AlumnoDTO();
-        dto.setDni(dniTextField.getText());
-        dto.setNombre(nombreTextField.getText());
+        dto.setDni(dniTextField.getText().trim());
+        dto.setNombre(nombreTextField.getText().trim());
 
         Calendar calendar = fecIngDateChooser.getCalendar();
-        LocalDate fecIng = LocalDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId()).toLocalDate();
+        LocalDate fecIng = LocalDateTime
+                .ofInstant(calendar.toInstant(),
+                        calendar.getTimeZone().toZoneId())
+                .toLocalDate();
+
         dto.setFecIng(fecIng);
 
+       
+        if (dto == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Primero debe conectar a la base de datos",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 3. DTO → Alumno (necesario porque tu DAO usa Alumno)
+        Alumno alumno = new Alumno();
+
+        alumno.setDni(Integer.parseInt(dto.getDni()));
+        alumno.setNombre(dto.getNombre());
+        alumno.setFecIng(dto.getFecIng());
+
+        // (IMPORTANTE: si tu tabla lo requiere, completa estos campos)
+        alumno.setApellido(dto.getApellido()); // o desde un campo del form
+        alumno.setPromedio(0.0);
+        alumno.setEstado(dto.getEstado());
+
+        // 4. INSERT en BD
+        dao.create(alumno);
+
+        // 5. Confirmación
+        JOptionPane.showMessageDialog(this,
+                "Alumno creado correctamente",
+                "Éxito",
+                JOptionPane.INFORMATION_MESSAGE);
+
         setVisible(false);
+
+    } catch (DAOException ex) {
+        JOptionPane.showMessageDialog(this,
+                "Error al insertar: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this,
+                "Error general: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
