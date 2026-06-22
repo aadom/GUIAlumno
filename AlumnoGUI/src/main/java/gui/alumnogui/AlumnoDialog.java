@@ -451,6 +451,7 @@ public class AlumnoDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private boolean validarForm() {
-        return StringUtils.isNotBlank(nombreTextField.getText());
+        return StringUtils.isNotBlank(nombreTextField.getText())
+            && StringUtils.isNotBlank(nombreTextField1.getText());
     }
 }
