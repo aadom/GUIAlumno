@@ -18,47 +18,47 @@ import persona.Alumno;
 public class TestDAO {
 
     public static void main(String[] args) throws DAOException {
-        DAO dao = null;
-        try {
-//            DAO<Alumno, Integer> dao = new AlumnoDAOTXT("alumnos.txt");
-            //DAO dao = new AlumnoDAOTXT("alumnos.txt");
-            DAOFactory factory = DAOFactory.getInstance();
-            // DAOFactory factory2 = DAOFactory.getInstance();
-            // DAOFactory factory3 = DAOFactory.getInstance();
-            
-            Map<String, String> config = new HashMap<>();
-//            config.put(DAOFactory.TIPO_DAO, DAOFactory.TIPO_DAO_TXT);
-//            config.put(DAOFactory.FULLPATH, "alumnos.txt");
-            
-            config.put(DAOFactory.TIPO_DAO, DAOFactory.TIPO_DAO_SQL);
-            config.put(DAOFactory.USER_DB, "root");
-            config.put(DAOFactory.PWD_DB, "root");
-            dao = factory.createDAO(config);
-            
-            Alumno alu = new Alumno(32678456);
-            alu.setNombre("Sandra Juana");
-            alu.setApellido("GARCIA");
-            alu.setPromedio(7.33);
-            alu.setFecIng(LocalDate.of(1993, 3, 15));
-            dao.create(alu);
-            
-            Alumno alu2 = new Alumno(12805819);
-            alu2.setNombre("Gabriela");
-            alu2.setApellido("Rojas");
-            alu2.setPromedio(9.25);
-            alu2.setFecIng(LocalDate.of(2010, 1, 2));
-            dao.create(alu2);
-            
-            Alumno aluRead = (Alumno) dao.read(7778999);
-            System.out.println("Alumno leído: "+aluRead);
-            //Alumno aluRead = dao.read(12345679);
-
-        } catch (DAOException | NombreApellidoInvalidoException | PromedioInvalidoException | DAOFactoryException ex) {
-            Logger.getLogger(TestDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally {
-            dao.close();
-        }
+//        DAO dao = null;
+//        try {
+////            DAO<Alumno, Integer> dao = new AlumnoDAOTXT("alumnos.txt");
+//            //DAO dao = new AlumnoDAOTXT("alumnos.txt");
+//            DAOFactory factory = DAOFactory.getInstance();
+//            // DAOFactory factory2 = DAOFactory.getInstance();
+//            // DAOFactory factory3 = DAOFactory.getInstance();
+//            
+//            Map<String, String> config = new HashMap<>();
+////            config.put(DAOFactory.TIPO_DAO, DAOFactory.TIPO_DAO_TXT);
+////            config.put(DAOFactory.FULLPATH, "alumnos.txt");
+//            
+//            config.put(DAOFactory.TIPO_DAO, DAOFactory.TIPO_DAO_SQL);
+//            config.put(DAOFactory.USER_DB, "root");
+//            config.put(DAOFactory.PWD_DB, "root");
+//            dao = factory.createDAO(config);
+//            
+//            Alumno alu = new Alumno(32678456);
+//            alu.setNombre("Sandra Juana");
+//            alu.setApellido("GARCIA");
+//            alu.setPromedio(7.33);
+//            alu.setFecIng(LocalDate.of(1993, 3, 15));
+//            dao.create(alu);
+//            
+//            Alumno alu2 = new Alumno(12805819);
+//            alu2.setNombre("Gabriela");
+//            alu2.setApellido("Rojas");
+//            alu2.setPromedio(9.25);
+//            alu2.setFecIng(LocalDate.of(2010, 1, 2));
+//            dao.create(alu2);
+//            
+//            Alumno aluRead = (Alumno) dao.read(7778999);
+//            System.out.println("Alumno leído: "+aluRead);
+//            //Alumno aluRead = dao.read(12345679);
+//
+//        } catch (DAOException | NombreApellidoInvalidoException | PromedioInvalidoException | DAOFactoryException ex) {
+//            Logger.getLogger(TestDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        finally {
+//            dao.close();
+//        }
         
     }
 }

@@ -39,8 +39,10 @@ public class AlumnoDialog extends javax.swing.JDialog {
             nombreTextField.setEnabled(false);
             nombreTextField1.setEnabled(false);
             nombreTextField3.setEnabled(false);
+            nombreTextField4.setEnabled(false);
             fecIngDateChooser.setEnabled(false);
             fecIngDateChooser1.setEnabled(false);
+            nombreTextField5.setEnabled(false);
         } else if (crudOption == CrudOptionsEnum.UPDATE) {
             dniTextField.setEnabled(false);
         }
@@ -78,6 +80,10 @@ public class AlumnoDialog extends javax.swing.JDialog {
         fecIngDateChooser1 = new com.toedter.calendar.JDateChooser();
         estado = new javax.swing.JLabel();
         nombreTextField3 = new javax.swing.JTextField();
+        cantMatAprob = new javax.swing.JLabel();
+        nombreTextField4 = new javax.swing.JTextField();
+        promedio = new javax.swing.JLabel();
+        nombreTextField5 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -107,7 +113,13 @@ public class AlumnoDialog extends javax.swing.JDialog {
 
         nombre.setText("Nombre:");
 
-        fecIng.setText("Fecha Ing:");
+        dniTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dniTextFieldActionPerformed(evt);
+            }
+        });
+
+        fecIng.setText("Fecha Ingreso:");
 
         apellido.setText("Apellido:");
 
@@ -115,17 +127,17 @@ public class AlumnoDialog extends javax.swing.JDialog {
 
         estado.setText("Estado:");
 
+        cantMatAprob.setText("Cant Mat Aprobadas:");
+
+        promedio.setText("Promedio");
+
         javax.swing.GroupLayout aluPanelLayout = new javax.swing.GroupLayout(aluPanel);
         aluPanel.setLayout(aluPanelLayout);
         aluPanelLayout.setHorizontalGroup(
             aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aluPanelLayout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
-                .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(aluPanelLayout.createSequentialGroup()
-                        .addComponent(estado, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(72, 72, 72)
-                        .addComponent(nombreTextField3))
+                .addGap(12, 12, 12)
+                .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(aluPanelLayout.createSequentialGroup()
                         .addComponent(dni, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(71, 71, 71)
@@ -134,7 +146,9 @@ public class AlumnoDialog extends javax.swing.JDialog {
                         .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(fecIng, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(fecIng, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(promedio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cantMatAprob, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(apellido, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(fecNac, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,7 +161,16 @@ public class AlumnoDialog extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(fecIngDateChooser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fecIngDateChooser1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(nombreTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(fecIngDateChooser1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aluPanelLayout.createSequentialGroup()
+                        .addComponent(estado, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(72, 72, 72)
+                        .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(nombreTextField3)
+                            .addComponent(nombreTextField4))
+                        .addContainerGap())))
         );
         aluPanelLayout.setVerticalGroup(
             aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,9 +197,16 @@ public class AlumnoDialog extends javax.swing.JDialog {
                     .addComponent(fecIngDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(promedio)
+                    .addComponent(nombreTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cantMatAprob)
+                    .addComponent(nombreTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(aluPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(estado)
-                    .addComponent(nombreTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
+                    .addComponent(nombreTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -244,6 +274,10 @@ public class AlumnoDialog extends javax.swing.JDialog {
         cargarDatosEnFormulario();
     }//GEN-LAST:event_formWindowActivated
 
+    private void dniTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dniTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dniTextFieldActionPerformed
+
     private void cargarDatosEnFormulario() {
         if (dto == null) {
             return;
@@ -253,12 +287,14 @@ public class AlumnoDialog extends javax.swing.JDialog {
         nombreTextField.setText(dto.getNombre());
         nombreTextField1.setText(dto.getApellido());
         nombreTextField3.setText(dto.getEstado() == 'A' ? "Activo" : "Inactivo");
+        nombreTextField4.setText(String.valueOf(dto.getCantMatAprob()));
+        nombreTextField5.setText(String.valueOf(dto.getPromedio()));
 
         if (dto.getFecNac() != null) {
             GregorianCalendar gcNac = GregorianCalendar.from(dto.getFecNac().atStartOfDay(ZoneId.systemDefault()));
             fecIngDateChooser.setCalendar(gcNac);
         }
-        
+
         if (dto.getFecIng() != null) {
             GregorianCalendar gcIng = GregorianCalendar.from(dto.getFecIng().atStartOfDay(ZoneId.systemDefault()));
             fecIngDateChooser1.setCalendar(gcIng);
@@ -311,6 +347,7 @@ public class AlumnoDialog extends javax.swing.JDialog {
     private javax.swing.JPanel aluPanel;
     private javax.swing.JLabel apellido;
     private javax.swing.JButton cancelarButton;
+    private javax.swing.JLabel cantMatAprob;
     private javax.swing.JLabel dni;
     private javax.swing.JTextField dniTextField;
     private javax.swing.JLabel estado;
@@ -322,7 +359,10 @@ public class AlumnoDialog extends javax.swing.JDialog {
     private javax.swing.JTextField nombreTextField;
     private javax.swing.JTextField nombreTextField1;
     private javax.swing.JTextField nombreTextField3;
+    private javax.swing.JTextField nombreTextField4;
+    private javax.swing.JTextField nombreTextField5;
     private javax.swing.JButton okButton;
+    private javax.swing.JLabel promedio;
     // End of variables declaration//GEN-END:variables
 
     private boolean validarForm() {

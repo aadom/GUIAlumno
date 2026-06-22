@@ -4,7 +4,12 @@
  */
 package dao;
 
+import exceptions.CantidadMateriasInvalidaException;
+import exceptions.DniInvalidoException;
+import exceptions.EstadoInvalidoException;
+import exceptions.FechaInvalidaException;
 import exceptions.NombreApellidoInvalidoException;
+import exceptions.PromedioInvalidoException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -45,21 +50,36 @@ public class AlumnoDAOTXT extends DAO<Alumno, Integer> {
     }
 
     @Override
-    public Alumno read(Integer dni) throws DAOException {
+    public Alumno read(Integer dni) 
+            throws DAOException {
         try {
             raf.seek(0); // Se posiciona al comienzo
             String linea;
             while ((linea = raf.readLine()) != null) {
                 String dniTxt = linea.substring(0, 8);
                 if (Integer.valueOf(dniTxt).equals(dni)) {
-                    return AlumnoUtils.string2Alumno(linea);
+                    try {
+                        return AlumnoUtils.string2Alumno(linea);
+                    } catch (DniInvalidoException ex) {
+                        Logger.getLogger(AlumnoDAOTXT.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(AlumnoDAOTXT.class.getName()).log(Level.SEVERE, null, ex);
             throw new DAOException(ex.getLocalizedMessage());
-        } catch (NombreApellidoInvalidoException ex) {
-            Logger.getLogger(AlumnoDAOTXT.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DniInvalidoException |
+                 FechaInvalidaException |
+                 EstadoInvalidoException |
+                 NombreApellidoInvalidoException |
+                 CantidadMateriasInvalidaException |
+                 PromedioInvalidoException ex) {
+
+            Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DAOException("Error al mapear datos (DNI="
+                   + dni
+                   + "): "
+                   + ex.getLocalizedMessage());
         }
         return null;
     }
@@ -76,23 +96,24 @@ public class AlumnoDAOTXT extends DAO<Alumno, Integer> {
         if (alu2Delete == null) {
             throw new DAOException("El alumno con DNI " + dni + " no existe en el archivo.");
         }
-        alu2Delete.setEstado('B');
-        update(alu2Delete);
+        try {
+            alu2Delete.setEstado('B');
+            update(alu2Delete);
+        } catch (EstadoInvalidoException ex) {
+            Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
+            throw new DAOException("TXT - Error al dar de baja (DNI="
+                   + dni
+                   + "): "
+                   + ex.getLocalizedMessage());
+        }
     }
 
     @Override
     public List<Alumno> findAll(boolean all) throws DAOException {
         List<Alumno> alumnos = new ArrayList<>();
-        try {
-            alumnos.add(new Alumno(1, "Juan", "Perez"));
-            alumnos.add(new Alumno(2, "Juana", "Gonzalez"));
-            alumnos.add(new Alumno(3, "Ines", "Garcia"));
-            alumnos.add(new Alumno(4, "Marcos", "Rojo"));
-        } catch (NombreApellidoInvalidoException ex) {
-            throw new DAOException(ex.getLocalizedMessage());
-        }
+        // TODO leer alumnos del archivo
 
-        return alumnos;
+        return null;
     }
 
     @Override
