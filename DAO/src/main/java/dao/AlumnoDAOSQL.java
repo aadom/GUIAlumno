@@ -31,15 +31,15 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
 
     AlumnoDAOSQL(String user, String password) throws DAOException {
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/universidad", "grupo06", "root");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/universidad", user, password);
             System.out.println("dao.AlumnoDAOSQL.<init>() OK!!!");
 
             String insertSql = "INSERT INTO alumnos\n"
-                    + "(DNI, NOMBRE, APELLIDO, FECNAC, FECING, PROMEDIO)\n"
-                    + "VALUES (?, ?, ?, ?, ?, ?);";
+                    + "(DNI, NOMBRE, APELLIDO, FECNAC, FECING, PROMEDIO, CANTMATAPROB, ESTADO)\n"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
             insertPrepareStatement = connection.prepareStatement(insertSql);
 
-            String readSql = "SELECT * FROM alumnos WHERE DNI = ?";
+            String readSql = "SELECT DNI, NOMBRE, APELLIDO, FECNAC, FECING, PROMEDIO, CANTMATAPROB, ESTADO FROM alumnos WHERE DNI = ?";
             readPrepareStatement = connection.prepareStatement(readSql);
 
         } catch (SQLException ex) {
@@ -78,8 +78,13 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
                 alu.setNombre(rs.getString("NOMBRE"));
                 alu.setApellido(rs.getString("APELLIDO"));
                 alu.setFecIng(DateUtils.sqlDate2LocalDate(rs.getDate("FECING")));
+                alu.setFecNac(DateUtils.sqlDate2LocalDate(rs.getDate("FECNAC")));
                 alu.setPromedio(rs.getDouble("PROMEDIO"));
+                alu.setCantMatAprob(rs.getShort("CANTMATAPROB"));
 
+                int estadoInt = rs.getInt("ESTADO");
+                char estadoChar = (estadoInt == 1) ? 'A' : 'B';
+                alu.setEstado(estadoChar);
                 return alu;
             }
         } catch (SQLException ex) {
@@ -94,7 +99,9 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
                  PromedioInvalidoException ex) {
 
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-            throw new DAOException("Error al setear datos del alumno: "
+            throw new DAOException("Error al setear datos del alumno (DNI="
+                    + dni
+                    + "): "
                     + ex.getLocalizedMessage());
         }
 
@@ -118,18 +125,21 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
         if (!all) {
             sql += " WHERE estado = 1";
         }
+        Integer dniActual = null;
         try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
             while (rs.next()) {
                 Alumno alu = new Alumno();
+                dniActual=rs.getInt("DNI");
                 alu.setDni(rs.getInt("DNI"));
                 alu.setNombre(rs.getString("NOMBRE"));
                 alu.setApellido(rs.getString("APELLIDO"));
                 alu.setFecNac(DateUtils.sqlDate2LocalDate(rs.getDate("FECNAC")));
                 alu.setFecIng(DateUtils.sqlDate2LocalDate(rs.getDate("FECING")));
                 alu.setPromedio(rs.getDouble("PROMEDIO"));
+                alu.setCantMatAprob(rs.getShort("CANTMATAPROB"));
+                
                 int estadoInt = rs.getInt("ESTADO");
-                char estadoChar = (estadoInt == 1) ? 'A' : 'I';
+                char estadoChar = (estadoInt == 1) ? 'A' : 'B';
                 alu.setEstado(estadoChar);
 
                 lista.add(alu);
@@ -141,11 +151,14 @@ public class AlumnoDAOSQL extends DAO<Alumno, Integer> {
                  FechaInvalidaException |
                  EstadoInvalidoException |
                  NombreApellidoInvalidoException |
+                 CantidadMateriasInvalidaException |
                  PromedioInvalidoException ex) {
 
             Logger.getLogger(AlumnoDAOSQL.class.getName()).log(Level.SEVERE, null, ex);
-            throw new DAOException("Error al mapear datos: "
-                    + ex.getLocalizedMessage());
+            throw new DAOException("Error al mapear datos (DNI="
+                   + dniActual
+                   + "): "
+                   + ex.getLocalizedMessage());
         }
         return lista;
     }
